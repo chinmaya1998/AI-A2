@@ -1,0 +1,11 @@
+maintaining the state - 
+
+identifying the soldiers (DONE)
+	-their moves (free)
+	-their moves (enemy is adjacent)
+	-attacks on enemy
+
+identifying the cannons 
+	-their moves
+	-their targets
+
