@@ -2,16 +2,16 @@
 Cannon - Game Bot
 
 
-maintaining the state - 
+Maintaining the state - 
 
-1. **identifying the soldiers (DONE)**
-    1. their moves (free)
-    2. their moves (enemy is adjacent)
-    3. attacks on enemy
+1. **Identifying the soldiers (DONE)**
+    1. Their moves (free)
+    2. Their moves (enemy is adjacent)
+    3. Attacks on enemy
 
-2.  **identifying the cannons (DONE)**
-    1. their moves
-    2. their targets
+2.  **Identifying the cannons (DONE)**
+    1. Their moves
+    2. Their targets
   
   Now trying to find and remove redundant moves (moves which will result into same state)
   
