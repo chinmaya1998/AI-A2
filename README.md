@@ -15,4 +15,4 @@ Maintaining the state -
   
   Now trying to find and remove redundant moves (moves which will result into same state)
   
-  Later - Will make the implementation of neighbourhood function more efficient - Will not analyse the whole state again but instead analyse just the changes
+  **Later** - Will make the implementation of neighbourhood function more efficient - Will not analyse the whole state again but instead analyse just the changes
