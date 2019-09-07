@@ -80,6 +80,9 @@ void print_board(matrix mat){
 	}
 	cout << "-----------------" << endl;
 }
+int random(int m){
+    return rand() % (m + 1);
+}
 
 
 bool valid_pos(vector<int> *pos, int n = 8, int m = 8){
@@ -265,7 +268,6 @@ vector<int> soldier_possible_moves(matrix* state, vector<int> pos){
 	vector<int> moves;
 	moves.reserve(12);
 	if(player_id == 1){
-
 		matrix forw_st = database[3][pos[0]*8 + pos[1]];
 		for (int i = 0; i < forw_st.size(); ++i){
 			if((*state)[forw_st[i][1]][forw_st[i][0]] == 0 || (*state)[forw_st[i][1]][forw_st[i][0]] == 3 || (*state)[forw_st[i][1]][forw_st[i][0]] == 4){
@@ -276,7 +278,7 @@ vector<int> soldier_possible_moves(matrix* state, vector<int> pos){
 		if(is_enemy_adjacent(state, pos)){
 			matrix retr_st = database[4][pos[0]*8 + pos[1]];
 			for (int i = 0; i < retr_st.size(); ++i){
-				if((*state)[retr_st[i][1]][retr_st[i][0]] == 0 || (*state)[retr_st[i][1]][retr_st[i][0]] == 3 || (*state)[forw_st[i][1]][forw_st[i][0]] == 4){
+				if((*state)[retr_st[i][1]][retr_st[i][0]] == 0 || (*state)[retr_st[i][1]][retr_st[i][0]] == 3 || (*state)[retr_st[i][1]][retr_st[i][0]] == 4){
 					moves.push_back(retr_st[i][0]);
 					moves.push_back(retr_st[i][1]);
 				}
@@ -286,15 +288,14 @@ vector<int> soldier_possible_moves(matrix* state, vector<int> pos){
 
 		matrix capt_sd = database[5][pos[0]*8 + pos[1]];
 		for (int i = 0; i < capt_sd.size(); ++i){
-			if((*state)[capt_sd[i][1]][capt_sd[i][0]] == 3 || (*state)[forw_st[i][1]][forw_st[i][0]] == 4){
+			if((*state)[capt_sd[i][1]][capt_sd[i][0]] == 3 || (*state)[capt_sd[i][1]][capt_sd[i][0]] == 4){
 				moves.push_back(capt_sd[i][0]);
 				moves.push_back(capt_sd[i][1]);
 			}
 		}
 	}
 
-	else if(player_id == 0){
-
+	else{
 		matrix forw_st = database[0][pos[0]*8 + pos[1]];
 		for (int i = 0; i < forw_st.size(); ++i){
 			if((*state)[forw_st[i][1]][forw_st[i][0]] == 0 || (*state)[forw_st[i][1]][forw_st[i][0]] == 1 || (*state)[forw_st[i][1]][forw_st[i][0]] == 2){
@@ -305,7 +306,7 @@ vector<int> soldier_possible_moves(matrix* state, vector<int> pos){
 		if(is_enemy_adjacent(state, pos)){
 			matrix retr_st = database[1][pos[0]*8 + pos[1]];
 			for (int i = 0; i < retr_st.size(); ++i){
-				if((*state)[retr_st[i][1]][retr_st[i][0]] == 0 || (*state)[retr_st[i][1]][retr_st[i][0]] == 1 || (*state)[forw_st[i][1]][forw_st[i][0]] == 2){
+				if((*state)[retr_st[i][1]][retr_st[i][0]] == 0 || (*state)[retr_st[i][1]][retr_st[i][0]] == 1 || (*state)[retr_st[i][1]][retr_st[i][0]] == 2){
 					moves.push_back(retr_st[i][0]);
 					moves.push_back(retr_st[i][1]);
 				}
@@ -314,7 +315,7 @@ vector<int> soldier_possible_moves(matrix* state, vector<int> pos){
 
 		matrix capt_sd = database[2][pos[0]*8 + pos[1]];
 		for (int i = 0; i < capt_sd.size(); ++i){
-			if((*state)[capt_sd[i][1]][capt_sd[i][0]] == 1 || (*state)[forw_st[i][1]][forw_st[i][0]] == 2){
+			if((*state)[capt_sd[i][1]][capt_sd[i][0]] == 1 || (*state)[capt_sd[i][1]][capt_sd[i][0]] == 2){
 				moves.push_back(capt_sd[i][0]);
 				moves.push_back(capt_sd[i][1]);
 			}
@@ -613,9 +614,9 @@ vector<string> move_cannon(matrix* state, matrix cannon){
 vector<string> next_moves(matrix* state){
 
 	// chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-
 	vector<string> ret;
 	matrix t1 = find_soldiers(state);
+
 	vector<int> t2;
 	for (int i = 0; i < t1.size(); ++i){
 		t2 = soldier_possible_moves(state, t1[i]);
@@ -623,7 +624,6 @@ vector<string> next_moves(matrix* state){
 			ret.push_back("S " + to_string(t1[i][0]) + " " + to_string(t1[i][1]) + " M " + to_string(t2[j]) + " " + to_string(t2[j+1]));	
 		}
 	}
-
 	// chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 	// cout << "Time difference = " << chrono::duration_cast<chrono::nanoseconds> (end - begin).count() << "[ns]" << endl;
 
@@ -641,6 +641,54 @@ vector<string> next_moves(matrix* state){
 	// cout << "Time difference = " << chrono::duration_cast<chrono::nanoseconds> (end - begin).count() << "[ns]" << endl;
 
 	return ret;
+}
+
+vector<int> features(matrix* state){
+	std::vector<int> ret;
+	ret.resize(10);
+	for (int i = 0; i < 8; ++i){
+		for (int j = 0; j < 8; ++j){
+			if((*state)[i][j] == 1){ // white soldier count
+				ret[0] += 1;
+			}
+			else if((*state)[i][j] == 3){ // black soldier count
+				ret[1] += 1;
+			}
+		}
+	}
+	for (int i = 0; i < 8; ++i){
+		if((*state)[0][i] == 2){ // white townhall count
+			ret[2] += 1;
+		}
+	}
+	for (int i = 0; i < 8; ++i){
+		if((*state)[7][i] == 4){ // black townhall count
+			ret[3] += 1;
+		}
+	}
+	// player_id = 1;
+	// matrix t1 = find_soldiers(state);
+	// ret[4] = find_cannons(t1,state).size(); // white cannon count
+	// player_id = 0;
+	// t1 = find_soldiers(state);
+	// ret[5] = find_cannons(t1,state).size(); // black cannon count
+	return ret;
+}
+
+matrix get_initial_board(){
+	matrix state;
+	std::vector<int> r1={2,1,2,1,2,1,2,1};
+	std::vector<int> r2={0,1,0,1,0,1,0,1};
+	std::vector<int> r3={0,1,0,1,0,1,0,1};
+	std::vector<int> r4={0,0,0,0,0,0,0,0};
+	std::vector<int> r5={0,0,0,0,0,0,0,0};
+	std::vector<int> r6={3,0,3,0,3,0,3,0};
+	std::vector<int> r7={3,0,3,0,3,0,3,0};
+	std::vector<int> r8={3,4,3,4,3,4,3,4};
+	state.push_back(r1);state.push_back(r2);state.push_back(r3);state.push_back(r4);
+	state.push_back(r5);state.push_back(r6);state.push_back(r7);state.push_back(r8);
+
+	return state;
 }
 
 
@@ -673,18 +721,8 @@ int main(int argc, char const *argv[]){
 
 
 
-	player_id = stoi(argv[1]);
-	matrix state;
-	std::vector<int> r1={2,1,2,1,2,1,2,1};
-	std::vector<int> r2={0,1,0,1,0,1,0,1};
-	std::vector<int> r3={0,1,0,1,0,1,0,1};
-	std::vector<int> r4={0,0,0,0,0,0,0,0};
-	std::vector<int> r5={0,0,0,0,0,0,0,0};
-	std::vector<int> r6={3,0,3,0,3,0,3,0};
-	std::vector<int> r7={3,0,3,0,3,0,3,0};
-	std::vector<int> r8={3,4,3,4,3,4,3,4};
-	state.push_back(r1);state.push_back(r2);state.push_back(r3);state.push_back(r4);
-	state.push_back(r5);state.push_back(r6);state.push_back(r7);state.push_back(r8);
+	// player_id = stoi(argv[1]);
+	
 	
 	// matrix state;
 	// std::vector<int> r1={2,0,2,0,2,0,2,0};
@@ -697,17 +735,51 @@ int main(int argc, char const *argv[]){
 	// std::vector<int> r8={0,4,3,4,0,4,0,4};
 	// state.push_back(r1);state.push_back(r2);state.push_back(r3);state.push_back(r4);
 	// state.push_back(r5);state.push_back(r6);state.push_back(r7);state.push_back(r8);
-	print_board(state);
+	// print_board(state);
 
 	std::vector<string> v;
-
-	for (int q = 0; q < 100000; ++q){
+	// for (int q = 0; q < 100000; ++q){
+	// 	v = next_moves(&state);
+	// 	// for (int e = 0; e < v.size(); ++e){
+	// 	// 	cout << v[e] << endl;
+	// 	// }
+	// 	// cout << v.size() << endl;
+	// }
+matrix state;
+int qw = 0;
+int tot = 0;
+srand(time(0));
+while(true){
+	std::vector<int> feat;
+	state = get_initial_board();
+	for (int i = 0; i < 500; ++i){
+		if(i%2 == 0){player_id = 1;}
+		else{player_id = 0;}
+		feat = features(&state);
+		if(feat[2] == 2){
+			// cout << "Player 1 wins!" << endl;
+			break;
+		}
+		if(feat[3] == 2){
+			// cout << "Player 0 wins!" << endl;
+			break;
+		}
+		// print_board(state);
 		v = next_moves(&state);
-		// for (int e = 0; e < v.size(); ++e){
-		// 	cout << v[e] << endl;
-		// }
-		// cout << v.size() << endl;
+		tot = tot + 1;
+		if(v.size() == 0){
+			// cout << "Stalemate" << endl;
+			break;
+		}
+		int r = random(v.size() - 1 );
+		// cout << "Player "<< player_id << " moved: " << v[r] << endl;
+		// cout << i << endl;
+		change_state(v[r],&state);
 	}
+	qw++;
+	if(qw >10000){break;}
+}
+cout << tot << endl;
 
 
 

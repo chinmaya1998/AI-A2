@@ -714,38 +714,17 @@ vector<int> features(board* state){
 			ret[3] += 1;
 		}
 	}
-	player_id = 1;
-	matrix t1 = find_soldiers(state);
-	ret[4] = find_cannons(t1,state).size(); // white cannon count
-	player_id = 0;
-	t1 = find_soldiers(state);
-	ret[5] = find_cannons(t1,state).size(); // black cannon count
+	// player_id = 1;
+	// matrix t1 = find_soldiers(state);
+	// ret[4] = find_cannons(t1,state).size(); // white cannon count
+	// player_id = 0;
+	// t1 = find_soldiers(state);
+	// ret[5] = find_cannons(t1,state).size(); // black cannon count
 	return ret;
 }
 
+board get_initial_board(){
 
-int main(int argc, char const *argv[]){
-	for (int d = 0; d < 2; ++d){
-		vector<matrix> temp2;
-		vector<matrix> temp3;
-		vector<matrix> temp4;
-		for (int e = 0; e < 8; ++e){
-			for (int f = 0; f < 8; ++f){
-				std::vector<int> pos = {e,f};
-				matrix tempa = forward_steps(pos,d);
-				matrix tempb = retreat_steps(pos,d);
-				matrix tempc = capture_side(pos);
-				temp2.push_back(tempa);
-				temp3.push_back(tempb);
-				temp4.push_back(tempc);
-			}
-		}
-		database.push_back(temp2);
-		database.push_back(temp3);
-		database.push_back(temp4);
-	}
-
-	player_id = stoi(argv[1]);
 	bmatrix blacks;
 	vector<bool> r1={0,0,0,0,0,0,0,0};
 	vector<bool> r2={0,0,0,0,0,0,0,0};
@@ -820,7 +799,7 @@ int main(int argc, char const *argv[]){
 		all.push_back(v3);
 	}
 	
-	vector<bmatrix> state;
+	board state;
 	state.push_back(blacks);
 	state.push_back(whites);
 	state.push_back(blackt);
@@ -828,31 +807,79 @@ int main(int argc, char const *argv[]){
 	state.push_back(white);
 	state.push_back(black);
 	state.push_back(all);
+
+	return state;
+}
+
+
+int main(int argc, char const *argv[]){
+	for (int d = 0; d < 2; ++d){
+		vector<matrix> temp2;
+		vector<matrix> temp3;
+		vector<matrix> temp4;
+		for (int e = 0; e < 8; ++e){
+			for (int f = 0; f < 8; ++f){
+				std::vector<int> pos = {e,f};
+				matrix tempa = forward_steps(pos,d);
+				matrix tempb = retreat_steps(pos,d);
+				matrix tempc = capture_side(pos);
+				temp2.push_back(tempa);
+				temp3.push_back(tempb);
+				temp4.push_back(tempc);
+			}
+		}
+		database.push_back(temp2);
+		database.push_back(temp3);
+		database.push_back(temp4);
+	}
+
+	// player_id = stoi(argv[1]);
+	
 	// print_board(state);
 
 	std::vector<string> v;
-	srand(time(0));
-	for (int i = 0; i < 160; ++i){
-		if(i%2 == 0){
-			player_id = 1;
+	// for (int q = 0; q < 100000; ++q){
+	// 	v = next_moves(&state);
+	// 	// for (int e = 0; e < v.size(); ++e){
+	// 	// 	cout << v[e] << endl;
+	// 	// }
+	// 	// cout << v.size() << endl;
+	// }
+board state;
+int qw = 0;
+int tot = 0;
+srand(time(0));
+while(true){
+	std::vector<int> feat;
+	state = get_initial_board();
+	for (int i = 0; i < 500; ++i){
+		if(i%2 == 0){player_id = 1;}
+		else{player_id = 0;}
+		feat = features(&state);
+		if(feat[2] == 2){
+			// cout << "Player 1 wins!" << endl;
+			break;
 		}
-		else{
-			player_id = 0;
+		if(feat[3] == 2){
+			// cout << "Player 0 wins!" << endl;
+			break;
 		}
 		// print_board(state);
-
 		v = next_moves(&state);
+		tot = tot + 1;
+		if(v.size() == 0){
+			// cout << "Stalemate" << endl;
+			break;
+		}
 		int r = random(v.size() - 1 );
 		// cout << "Player "<< player_id << " moved: " << v[r] << endl;
-		cout << i << endl;
+		// cout << i << endl;
 		change_state(v[r],&state);
-
-		// for (int i = 0; i < v.size(); ++i){
-		// 	// cout << v[i] << endl;
-		// }
-		// cout << v.size() << endl;
 	}
-
+	qw++;
+	if(qw >10000){break;}
+}
+cout << tot << endl;
 
 
 
