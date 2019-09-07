@@ -255,7 +255,7 @@ bool is_enemy_adjacent(matrix* state, vector<int> pos){
 	else if (player_id == 1){
 		for (int i = 0; i < adj_blocks2.size(); ++i){
 			v = pos + adj_blocks2[i];
-			if(valid_pos(&v) && ((*state)[v[1]][v[0]] == 1)){
+			if(valid_pos(&v) && ((*state)[v[1]][v[0]] == 3)){
 				return true;
 			}
 		}
@@ -691,6 +691,21 @@ matrix get_initial_board(){
 	return state;
 }
 
+matrix get_fixed_board(){
+	matrix state;
+	std::vector<int> r1={2,1,2,1,2,1,2,0};
+	std::vector<int> r2={0,0,0,1,0,1,1,1};
+	std::vector<int> r3={1,1,0,0,0,0,0,1};
+	std::vector<int> r4={0,0,1,0,1,0,0,0};
+	std::vector<int> r5={0,3,0,0,3,0,0,0};
+	std::vector<int> r6={0,0,3,3,0,3,3,0};
+	std::vector<int> r7={3,0,0,0,0,0,3,0};
+	std::vector<int> r8={3,4,3,4,3,4,3,4};
+	state.push_back(r1);state.push_back(r2);state.push_back(r3);state.push_back(r4);
+	state.push_back(r5);state.push_back(r6);state.push_back(r7);state.push_back(r8);
+
+	return state;
+}
 
 int main(int argc, char const *argv[]){
 
@@ -712,42 +727,26 @@ int main(int argc, char const *argv[]){
 		database.push_back(temp2);
 		database.push_back(temp3);
 		database.push_back(temp4);
-	}
-	// for (int i = 0; i < 8; ++i){
-	// 	for (int j = 0; j < 8; ++j){
-	// 		database2.insert({i,j});
-	// 	}
-	// }
-
-
-
+	}	
+	
 	// player_id = stoi(argv[1]);
-	
-	
-	// matrix state;
-	// std::vector<int> r1={2,0,2,0,2,0,2,0};
-	// std::vector<int> r2={0,0,1,0,0,0,0,0};
-	// std::vector<int> r3={0,0,0,1,0,0,0,0};
-	// std::vector<int> r4={1,0,3,1,0,1,0,0};
-	// std::vector<int> r5={0,0,0,0,0,3,0,0};
-	// std::vector<int> r6={0,0,0,0,3,0,3,0};
-	// std::vector<int> r7={0,0,0,0,0,0,0,0};
-	// std::vector<int> r8={0,4,3,4,0,4,0,4};
-	// state.push_back(r1);state.push_back(r2);state.push_back(r3);state.push_back(r4);
-	// state.push_back(r5);state.push_back(r6);state.push_back(r7);state.push_back(r8);
-	// print_board(state);
+	// cout << player_id << endl;
 
-	std::vector<string> v;
-	// for (int q = 0; q < 100000; ++q){
-	// 	v = next_moves(&state);
-	// 	// for (int e = 0; e < v.size(); ++e){
-	// 	// 	cout << v[e] << endl;
-	// 	// }
-	// 	// cout << v.size() << endl;
+
+	// matrix state = get_fixed_board();
+	// print_board(state);
+	// std::vector<string> v = next_moves(&state);
+	// for (int i = 0; i < v.size(); ++i){
+	// 	cout << v[i] << endl;
 	// }
+	// cout << v.size() << endl;
+
+	
+std::vector<string> v;
 matrix state;
 int qw = 0;
 int tot = 0;
+int tot1 = 0;
 srand(time(0));
 while(true){
 	std::vector<int> feat;
@@ -757,15 +756,19 @@ while(true){
 		else{player_id = 0;}
 		feat = features(&state);
 		if(feat[2] == 2){
+			// print_board(state);
 			// cout << "Player 1 wins!" << endl;
 			break;
 		}
 		if(feat[3] == 2){
+			// print_board(state);
 			// cout << "Player 0 wins!" << endl;
 			break;
 		}
 		// print_board(state);
 		v = next_moves(&state);
+		tot1 = tot1 + v.size();
+		// cout << v.size() <<endl;
 		tot = tot + 1;
 		if(v.size() == 0){
 			// cout << "Stalemate" << endl;
@@ -777,8 +780,9 @@ while(true){
 		change_state(v[r],&state);
 	}
 	qw++;
-	if(qw >10000){break;}
+	if(qw >100000){break;}
 }
+cout << (float)tot1/tot <<endl;
 cout << tot << endl;
 
 

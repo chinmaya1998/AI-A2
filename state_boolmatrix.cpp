@@ -301,7 +301,7 @@ bool is_enemy_adjacent(board* state, vector<int> pos){
 			}
 		}
 	}
-	else if (player_id == 1){
+	else{
 		for (int i = 0; i < adj_blocks2.size(); ++i){
 			v = pos + adj_blocks2[i];
 			if(valid_pos(&v) && ((*state)[0][v[1]][v[0]] == true)){
@@ -811,8 +811,97 @@ board get_initial_board(){
 	return state;
 }
 
+board get_fixed_board(){
+
+	bmatrix blacks;
+	vector<bool> r1={0,0,0,0,0,0,0,0};
+	vector<bool> r2={0,0,0,0,0,0,0,0};
+	vector<bool> r3={0,0,0,0,0,0,0,0};
+	vector<bool> r4={0,0,0,0,0,0,0,0};
+	vector<bool> r5={0,1,0,0,1,0,0,0};
+	vector<bool> r6={0,0,1,1,0,1,1,0};
+	vector<bool> r7={1,0,0,0,0,0,1,0};
+	vector<bool> r8={1,0,1,0,1,0,1,0};
+	blacks.push_back(r1);blacks.push_back(r2);blacks.push_back(r3);blacks.push_back(r4);
+	blacks.push_back(r5);blacks.push_back(r6);blacks.push_back(r7);blacks.push_back(r8);
+	bmatrix whites;
+	r1={0,1,0,1,0,1,0,0};
+	r2={0,0,0,1,0,1,1,1};
+	r3={1,1,0,0,0,0,0,1};
+	r4={0,0,1,0,1,0,0,0};
+	r5={0,0,0,0,0,0,0,0};
+	r6={0,0,0,0,0,0,0,0};
+	r7={0,0,0,0,0,0,0,0};
+	r8={0,0,0,0,0,0,0,0};
+	whites.push_back(r1);whites.push_back(r2);whites.push_back(r3);whites.push_back(r4);
+	whites.push_back(r5);whites.push_back(r6);whites.push_back(r7);whites.push_back(r8);
+	bmatrix blackt;
+	r1={0,0,0,0,0,0,0,0};
+	r2={0,0,0,0,0,0,0,0};
+	r3={0,0,0,0,0,0,0,0};
+	r4={0,0,0,0,0,0,0,0};
+	r5={0,0,0,0,0,0,0,0};
+	r6={0,0,0,0,0,0,0,0};
+	r7={0,0,0,0,0,0,0,0};
+	r8={0,1,0,1,0,1,0,1};
+	blackt.push_back(r1);blackt.push_back(r2);blackt.push_back(r3);blackt.push_back(r4);
+	blackt.push_back(r5);blackt.push_back(r6);blackt.push_back(r7);blackt.push_back(r8);
+	bmatrix whitet;
+	r1={1,0,1,0,1,0,1,0};
+	r2={0,0,0,0,0,0,0,0};
+	r3={0,0,0,0,0,0,0,0};
+	r4={0,0,0,0,0,0,0,0};
+	r5={0,0,0,0,0,0,0,0};
+	r6={0,0,0,0,0,0,0,0};
+	r7={0,0,0,0,0,0,0,0};
+	r8={0,0,0,0,0,0,0,0};
+	whitet.push_back(r1);whitet.push_back(r2);whitet.push_back(r3);whitet.push_back(r4);
+	whitet.push_back(r5);whitet.push_back(r6);whitet.push_back(r7);whitet.push_back(r8);
+	bmatrix white;
+	bmatrix black;
+	bmatrix all;
+	
+	for (int i = 0; i < 8; ++i){
+		vector<bool> v1;
+		vector<bool> v2;
+		vector<bool> v3;
+		for (int j = 0; j < 8; ++j){
+			if(whitet[i][j] == true || whites[i][j] == true){
+				v1.push_back(true);
+				v2.push_back(false);
+				v3.push_back(true);
+			}
+			else if(blackt[i][j] == true || blacks[i][j] == true){
+				v1.push_back(false);
+				v2.push_back(true);
+				v3.push_back(true);
+			}
+			else{
+				v1.push_back(false);
+				v2.push_back(false);
+				v3.push_back(false);
+			}
+		}
+		white.push_back(v1);
+		black.push_back(v2);
+		all.push_back(v3);
+	}
+	
+	board state;
+	state.push_back(blacks);
+	state.push_back(whites);
+	state.push_back(blackt);
+	state.push_back(whitet);
+	state.push_back(white);
+	state.push_back(black);
+	state.push_back(all);
+
+	return state;
+}
+
 
 int main(int argc, char const *argv[]){
+
 	for (int d = 0; d < 2; ++d){
 		vector<matrix> temp2;
 		vector<matrix> temp3;
@@ -832,22 +921,24 @@ int main(int argc, char const *argv[]){
 		database.push_back(temp3);
 		database.push_back(temp4);
 	}
-
-	// player_id = stoi(argv[1]);
 	
-	// print_board(state);
+	// player_id = stoi(argv[1]);
+	// cout << player_id << endl;
 
-	std::vector<string> v;
-	// for (int q = 0; q < 100000; ++q){
-	// 	v = next_moves(&state);
-	// 	// for (int e = 0; e < v.size(); ++e){
-	// 	// 	cout << v[e] << endl;
-	// 	// }
-	// 	// cout << v.size() << endl;
+
+	// board state = get_fixed_board();
+	// print_board(state);
+	// std::vector<string> v = next_moves(&state);
+	// for (int i = 0; i < v.size(); ++i){
+	// 	cout << v[i] << endl;
 	// }
+	// cout << v.size() << endl;
+
+std::vector<string> v;
 board state;
 int qw = 0;
 int tot = 0;
+int tot1 = 0;
 srand(time(0));
 while(true){
 	std::vector<int> feat;
@@ -857,15 +948,19 @@ while(true){
 		else{player_id = 0;}
 		feat = features(&state);
 		if(feat[2] == 2){
+			// print_board(state);
 			// cout << "Player 1 wins!" << endl;
 			break;
 		}
 		if(feat[3] == 2){
+			// print_board(state);
 			// cout << "Player 0 wins!" << endl;
 			break;
 		}
 		// print_board(state);
 		v = next_moves(&state);
+		tot1 = tot1 + v.size();
+		// cout << v.size() <<endl;
 		tot = tot + 1;
 		if(v.size() == 0){
 			// cout << "Stalemate" << endl;
@@ -877,8 +972,9 @@ while(true){
 		change_state(v[r],&state);
 	}
 	qw++;
-	if(qw >10000){break;}
+	if(qw >100000){break;}
 }
+cout << (float)tot1/tot <<endl;
 cout << tot << endl;
 
 
