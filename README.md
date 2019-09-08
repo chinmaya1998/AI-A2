@@ -1,8 +1,8 @@
 # AI-A2
 Cannon - Game Bot
 
-Either use state.cpp or state_boolmatrix.cpp
-**state.cpp** - uses 1 vector<vector<int>> of 32 bit(4 Bytes) ints
+Either use state.cpp or state_boolmatrix.cpp </br>
+**state.cpp** - uses 1 vector<vector<int>> of 32 bit(4 Bytes) ints </br>
 **state_boolmatrix.cpp** - uses 7 vector<vector<bool>> of 8 bit(1 Byte) bools 
 
 Maintaining the state - 
