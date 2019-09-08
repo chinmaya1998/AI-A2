@@ -278,9 +278,9 @@ matrix find_soldiers(board* state){
 		}
 	}
 	else{
-		for (int i = 0; i < (*state).size(); ++i){
-			for (int j = 0; j < (*state)[1].size(); ++j){
-				if((*state)[1][i][j] == 1){
+		for (int i = 0; i < (*state)[1].size(); ++i){
+			for (int j = 0; j < (*state)[1][0].size(); ++j){
+				if((*state)[1][i][j] == true){
 					ret.push_back({j,i});	
 				}
 			}
@@ -294,7 +294,7 @@ matrix adj_blocks2 = {{0,1},{-1,1},{1,1},{1,0},{-1,0}};
 bool is_enemy_adjacent(board* state, vector<int> pos){
 	std::vector<int> v;
 	if(player_id == 0){
-		for (int i = 0; i < adj_blocks1.size(); ++i){
+		for (int i = 0; i < 5; ++i){
 			v = pos + adj_blocks1[i];
 			if(valid_pos(&v) && ((*state)[1][v[1]][v[0]] == true)){
 				return true;
@@ -302,7 +302,7 @@ bool is_enemy_adjacent(board* state, vector<int> pos){
 		}
 	}
 	else{
-		for (int i = 0; i < adj_blocks2.size(); ++i){
+		for (int i = 0; i < 5; ++i){
 			v = pos + adj_blocks2[i];
 			if(valid_pos(&v) && ((*state)[0][v[1]][v[0]] == true)){
 				return true;
@@ -319,7 +319,8 @@ vector<int> soldier_possible_moves(board* state, vector<int> pos){
 		
 		matrix forw_st = database[3][pos[0]*8 + pos[1]];
 		for (int i = 0; i < forw_st.size(); ++i){
-			if((*state)[6][forw_st[i][1]][forw_st[i][0]] == false || (*state)[5][forw_st[i][1]][forw_st[i][0]] == true){
+			// if((*state)[6][forw_st[i][1]][forw_st[i][0]] == false || (*state)[5][forw_st[i][1]][forw_st[i][0]] == true){
+			if((*state)[4][forw_st[i][1]][forw_st[i][0]] == false){
 				moves.push_back(forw_st[i][0]);
 				moves.push_back(forw_st[i][1]);
 			}
@@ -327,7 +328,8 @@ vector<int> soldier_possible_moves(board* state, vector<int> pos){
 		if(is_enemy_adjacent(state, pos)){
 			matrix retr_st = database[4][pos[0]*8 + pos[1]];
 			for (int i = 0; i < retr_st.size(); ++i){
-				if((*state)[6][retr_st[i][1]][retr_st[i][0]] == false || (*state)[5][retr_st[i][1]][retr_st[i][0]] == true){
+				// if((*state)[6][retr_st[i][1]][retr_st[i][0]] == false || (*state)[5][retr_st[i][1]][retr_st[i][0]] == true){
+				if((*state)[4][retr_st[i][1]][retr_st[i][0]] == false){
 					moves.push_back(retr_st[i][0]);
 					moves.push_back(retr_st[i][1]);
 				}
@@ -347,7 +349,8 @@ vector<int> soldier_possible_moves(board* state, vector<int> pos){
 	else{
 		matrix forw_st = database[0][pos[0]*8 + pos[1]];
 		for (int i = 0; i < forw_st.size(); ++i){
-			if((*state)[6][forw_st[i][1]][forw_st[i][0]] == false  || (*state)[4][forw_st[i][1]][forw_st[i][0]] == true){
+			// if((*state)[6][forw_st[i][1]][forw_st[i][0]] == false  || (*state)[4][forw_st[i][1]][forw_st[i][0]] == true){
+			if((*state)[5][forw_st[i][1]][forw_st[i][0]] == false){
 				moves.push_back(forw_st[i][0]);
 				moves.push_back(forw_st[i][1]);
 			}
@@ -355,7 +358,8 @@ vector<int> soldier_possible_moves(board* state, vector<int> pos){
 		if(is_enemy_adjacent(state, pos)){
 			matrix retr_st = database[1][pos[0]*8 + pos[1]];
 			for (int i = 0; i < retr_st.size(); ++i){
-				if((*state)[6][retr_st[i][1]][retr_st[i][0]] == false  || (*state)[4][retr_st[i][1]][retr_st[i][0]] == true){
+				// if((*state)[6][retr_st[i][1]][retr_st[i][0]] == false  || (*state)[4][retr_st[i][1]][retr_st[i][0]] == true){
+				if((*state)[5][retr_st[i][1]][retr_st[i][0]] == false){
 					moves.push_back(retr_st[i][0]);
 					moves.push_back(retr_st[i][1]);
 				}
@@ -573,7 +577,7 @@ vector<string> bomb_cannon(board* state, matrix cannon, bool* flag){
 				for (int j = 0; j < 2; ++j){
 					t1 = t1 + dif;
 					if(valid_pos(&t1) && ((*state)[4][t1[1]][t1[0]] == false)){
-						if((*flag) || !((*state)[6][t1[1]][t1[0]] == false)){
+						if((*flag) || ((*state)[6][t1[1]][t1[0]] == true)){
 							s = "S ";
 							s += to_string(cannon[0][0]);
 							s += " ";
@@ -599,7 +603,7 @@ vector<string> bomb_cannon(board* state, matrix cannon, bool* flag){
 				for (int j = 0; j < 2; ++j){
 					t1 = t1 + dif;
 					if(valid_pos(&t1) && ((*state)[5][t1[1]][t1[0]] == false)){
-						if((*flag) || !((*state)[6][t1[1]][t1[0]] == false)){
+						if((*flag) || ((*state)[6][t1[1]][t1[0]] == true)){
 							s = "S ";
 							s += to_string(cannon[0][0]);
 							s += " ";
@@ -817,18 +821,18 @@ board get_fixed_board(){
 	vector<bool> r1={0,0,0,0,0,0,0,0};
 	vector<bool> r2={0,0,0,0,0,0,0,0};
 	vector<bool> r3={0,0,0,0,0,0,0,0};
-	vector<bool> r4={0,0,0,0,0,0,0,0};
-	vector<bool> r5={0,1,0,0,1,0,0,0};
-	vector<bool> r6={0,0,1,1,0,1,1,0};
-	vector<bool> r7={1,0,0,0,0,0,1,0};
-	vector<bool> r8={1,0,1,0,1,0,1,0};
+	vector<bool> r4={0,0,0,0,0,0,1,0};
+	vector<bool> r5={1,0,1,0,1,0,0,0};
+	vector<bool> r6={1,0,0,1,0,0,1,0};
+	vector<bool> r7={1,0,0,0,1,0,0,0};
+	vector<bool> r8={0,0,1,0,0,0,1,0};
 	blacks.push_back(r1);blacks.push_back(r2);blacks.push_back(r3);blacks.push_back(r4);
 	blacks.push_back(r5);blacks.push_back(r6);blacks.push_back(r7);blacks.push_back(r8);
 	bmatrix whites;
-	r1={0,1,0,1,0,1,0,0};
-	r2={0,0,0,1,0,1,1,1};
-	r3={1,1,0,0,0,0,0,1};
-	r4={0,0,1,0,1,0,0,0};
+	r1={0,0,0,1,0,0,0,1};
+	r2={0,0,1,0,0,0,1,1};
+	r3={1,0,1,1,1,0,0,1};
+	r4={0,0,0,0,1,0,0,0};
 	r5={0,0,0,0,0,0,0,0};
 	r6={0,0,0,0,0,0,0,0};
 	r7={0,0,0,0,0,0,0,0};
@@ -921,7 +925,7 @@ int main(int argc, char const *argv[]){
 		database.push_back(temp3);
 		database.push_back(temp4);
 	}
-	
+
 	// player_id = stoi(argv[1]);
 	// cout << player_id << endl;
 
@@ -972,7 +976,7 @@ while(true){
 		change_state(v[r],&state);
 	}
 	qw++;
-	if(qw >100000){break;}
+	if(qw >10000){break;}
 }
 cout << (float)tot1/tot <<endl;
 cout << tot << endl;
