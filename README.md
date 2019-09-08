@@ -1,6 +1,9 @@
 # AI-A2
 Cannon - Game Bot
 
+Either use state.cpp or state_boolmatrix.cpp
+**state.cpp** - uses 1 vector<vector<int>> of 32 bit(4 Bytes) ints
+**state_boolmatrix.cpp** - uses 7 vector<vector<bool>> of 8 bit(1 Byte) bools 
 
 Maintaining the state - 
 
@@ -12,7 +15,5 @@ Maintaining the state -
 2.  **Identifying the cannons (DONE)**
     1. Their moves
     2. Their targets
-  
-  Now trying to find and remove redundant moves (moves which will result into same state)
-  
-  **Later** - Will make the implementation of neighbourhood function more efficient - Will not analyse the whole state again but instead analyse just the changes
+    
+  **Later** - Will try to implement the bitboard representation
