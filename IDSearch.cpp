@@ -21,7 +21,7 @@ string mv = "";
 int check = 0;
 int my_id = 0;
 
-
+//uncomment this if you use bitboard.cpp
 /*vector<board> getAllNeighbour(board &state, bool player_id){
 	vector<board> neighbour = soldier_moves(state, player_id);
 	vector<uint16_t> cns = cannons(state, player_id);
