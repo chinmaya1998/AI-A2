@@ -1024,12 +1024,13 @@ vector<board> cannon_moves(board bd, bool id){
 	uint64_t wt  = bd.get_white_townhall();
 	uint64_t all = bd.get_all();
 	uint64_t r;
+	uint64_t supp;
 
 	uint16_t x;
 	uint16_t y;
 	uint16_t z;
 	std::vector<int> v;
-	// bool flag = true;
+	bool flag = true;
 
 	if(id == false){  // my soldiers are black
 		for (int i = 0; i < 8; ++i){ // checking columns
@@ -1037,21 +1038,28 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 0);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = up_sd23[x] & wall;
+			r = up_sd23[x] & ~ball;
 			while(((up_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}				
 			}
-			r = wall & down_sd23[y];
+			r = ~ball & down_sd23[y];
 			while(((down_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 
 			if((up_sd[x] & (~all)) != 0){
@@ -1072,21 +1080,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 1);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = left_sd23[x] & wall;
+			r = left_sd23[x] & ~ball;
 			while(((left_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & right_sd23[y];
+			r = ~ball & right_sd23[y];
 			while(((right_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((left_sd[x] & (~all)) != 0){
 				temp = bd;
@@ -1106,21 +1120,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 2);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = diag_top23[x] & wall;
+			r = diag_top23[x] & ~ball;
 			while(((diag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & diag_down23[y];
+			r = ~ball & diag_down23[y];
 			while(((diag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((diag_top[x] & (~all)) != 0){
 				temp = bd;
@@ -1140,21 +1160,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 3);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = ndiag_top23[x] & wall;
+			r = ndiag_top23[x] & ~ball;
 			while(((ndiag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & ndiag_down23[y];
+			r = ~ball & ndiag_down23[y];
 			while(((ndiag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_white_soldiers_townhall( wspe&(~data[z]) , wt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((ndiag_top[x] & (~all)) != 0){
 				temp = bd;
@@ -1178,21 +1204,27 @@ vector<board> cannon_moves(board bd, bool id){
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
 			cout << "cols" << endl;
-			r = up_sd23[x] & ball;
+			r = up_sd23[x] & ~wall;
 			while(((up_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & down_sd23[y];
+			r = ~wall & down_sd23[y];
 			while(((down_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((up_sd[x] & (~all)) != 0){
 				temp = bd;
@@ -1212,21 +1244,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 1);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = left_sd23[x] & ball;
+			r = left_sd23[x] & ~wall;
 			while(((left_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & right_sd23[y];
+			r = ~wall & right_sd23[y];
 			while(((right_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((left_sd[x] & (~all)) != 0){
 				temp = bd;
@@ -1246,21 +1284,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 2);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = diag_top23[x] & ball;
+			r = diag_top23[x] & ~wall;
 			while(((diag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & diag_down23[y];
+			r = ~wall & diag_down23[y];
 			while(((diag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((diag_top[x] & (~all)) != 0){
 				temp = bd;
@@ -1280,21 +1324,27 @@ vector<board> cannon_moves(board bd, bool id){
 			v = find_cannon(r , 3);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = ndiag_top23[x] & ball;
+			r = ndiag_top23[x] & ~wall;
 			while(((ndiag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & ndiag_down23[y];
+			r = ~wall & ndiag_down23[y];
 			while(((ndiag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = bd;
-				temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = bd;
+					temp.set_black_soldiers_townhall( bspe&(~data[z]) , bt&(~data[z]) );
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((ndiag_top[x] & (~all)) != 0){
 				temp = bd;
@@ -1332,7 +1382,7 @@ vector<string> cannon_moves_string(board bd, bool id){
 	uint16_t y;
 	uint16_t z;
 	std::vector<int> v;
-	// bool flag = true;
+	bool flag = true;
 
 	if(id == false){  // my soldiers are black
 		for (int i = 0; i < 8; ++i){ // checking columns
@@ -1340,19 +1390,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 0);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = up_sd23[x] & wall;
+			r = up_sd23[x] & ~ball;
 			while(((up_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & down_sd23[y];
+			r = ~ball & down_sd23[y];
 			while(((down_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 
 			if((up_sd[x] & (~all)) != 0){
@@ -1371,19 +1427,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 1);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = left_sd23[x] & wall;
+			r = left_sd23[x] & ~ball;
 			while(((left_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & right_sd23[y];
+			r = ~ball & right_sd23[y];
 			while(((right_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((left_sd[x] & (~all)) != 0){
 				temp = "S " + to_string((x+2)%8) + " " + to_string((x+2)/8) + " M " + to_string((x-1)%8) + " " + to_string((x-1)/8);
@@ -1401,19 +1463,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 2);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = diag_top23[x] & wall;
+			r = diag_top23[x] & ~ball;
 			while(((diag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & diag_down23[y];
+			r = ~ball & diag_down23[y];
 			while(((diag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((diag_top[x] & (~all)) != 0){
 				temp = "S " + to_string((x+14)%8) + " " + to_string((x+14)/8) + " M " + to_string((x-7)%8) + " " + to_string((x-7)/8);
@@ -1431,19 +1499,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 3);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = ndiag_top23[x] & wall;
+			r = ndiag_top23[x] & ~ball;
 			while(((ndiag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = wall & ndiag_down23[y];
+			r = ~ball & ndiag_down23[y];
 			while(((ndiag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((ndiag_top[x] & (~all)) != 0){
 				temp = "S " + to_string((x+18)%8) + " " + to_string((x+18)/8) + " M " + to_string((x-9)%8) + " " + to_string((x-9)/8);
@@ -1464,19 +1538,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 0);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = up_sd23[x] & ball;
+			r = up_sd23[x] & ~wall;
 			while(((up_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & down_sd23[y];
+			r = ~wall & down_sd23[y];
 			while(((down_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((up_sd[x] & (~all)) != 0){
 				temp = "S " + to_string((x+16)%8) + " " + to_string((x+16)/8) + " M " + to_string((x-8)%8) + " " + to_string((x-8)/8);
@@ -1494,19 +1574,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 1);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = left_sd23[x] & ball;
+			r = left_sd23[x] & ~wall;
 			while(((left_sd[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & right_sd23[y];
+			r = ~wall & right_sd23[y];
 			while(((right_sd[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((left_sd[x] & (~all)) != 0){
 				temp = "S " + to_string((x+2)%8) + " " + to_string((x+2)/8) + " M " + to_string((x-1)%8) + " " + to_string((x-1)/8);
@@ -1524,19 +1610,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 2);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = diag_top23[x] & ball;
+			r = diag_top23[x] & ~wall;
 			while(((diag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & diag_down23[y];
+			r = ~wall & diag_down23[y];
 			while(((diag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((diag_top[x] & (~all)) != 0){
 				temp = "S " + to_string((x+14)%8) + " " + to_string((x+14)/8) + " M " + to_string((x-7)%8) + " " + to_string((x-7)/8);
@@ -1554,19 +1646,25 @@ vector<string> cannon_moves_string(board bd, bool id){
 			v = find_cannon(r , 3);
 			x = v[0]; y = v[1];
 			if(y==64){continue;}
-			r = ndiag_top23[x] & ball;
+			r = ndiag_top23[x] & ~wall;
 			while(((ndiag_top[x] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
-			r = ball & ndiag_down23[y];
+			r = ~wall & ndiag_down23[y];
 			while(((ndiag_down[y] & (~all)) != 0) && r!=0){
 				z = bitScanForward(r);
 				r = r & (~data[z]);
-				temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
-				ret.push_back(temp);
+				if(flag || ((data[z] & ~all) == 0)){
+					temp = "S " + to_string(x%8) + " " + to_string(x/8) + " B " + to_string(z%8) + " " + to_string(z/8);
+					ret.push_back(temp);
+					flag = false;
+				}
 			}
 			if((ndiag_top[x] & (~all)) != 0){
 				temp = "S " + to_string((x+18)%8) + " " + to_string((x+18)/8) + " M " + to_string((x-9)%8) + " " + to_string((x-9)/8);
@@ -1640,15 +1738,21 @@ int main(int argc, char const *argv[]){
 
 	board bd = fixed_board2();
 	print_board(bd);
-	vector<string> v = cannon_moves_string(bd,player_id);
-	for (int i = 0; i < v.size(); ++i){
-		cout << v[i] << endl;
-	}
 
-	// std::vector<board> v = getAllNeighbour(bd,player_id);
-	// for (int i = 0; i < 6500000; ++i){
-	// 	getAllNeighbour(bd, player_id);
+	// vector<board> v1 = cannon_moves(bd,player_id);
+	// for (int i = 0; i < v1.size(); ++i){
+	// 	print_board(v1[i]);
 	// }
+
+	// vector<string> v = cannon_moves_string(bd,player_id);
+	// for (int i = 0; i < v.size(); ++i){
+	// 	cout << v[i] << endl;
+	// }
+
+	std::vector<board> v = getAllNeighbour(bd,player_id);
+	for (int i = 0; i < 6500000; ++i){
+		getAllNeighbour(bd, player_id);
+	}
 
 	
 	// print_board(bd);
