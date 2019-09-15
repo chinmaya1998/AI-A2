@@ -254,8 +254,8 @@ void fill_database(){
 			pos = {i,j};
 
 			t =0;
-			for(int k =-2 ; k<2; k++){
-				for(int l = -2; l<2; l++){
+			for(int k =-3 ; k<3; k++){
+				for(int l = -3; l<3; l++){
 					vector<int> posn = {i+k, j+l};
 					if(valid_pos(&posn)){
 						t = t + pow(2, posn[0] + 8*posn[1]);
@@ -313,28 +313,28 @@ void fill_database(){
 
 void print_intvector(std::vector<int> v){
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i){
-		std::cout << *i << ' ' ;
+		std::cerr << *i << ' ' ;
 	}
-	std::cout << std::endl;
+	std::cerr << std::endl;
 }
 void print_matrix(matrix mat){
 	for (matrix::iterator i = mat.begin(); i != mat.end(); ++i){
 		print_intvector(*i);
 	}
-	cout << "---------------" << endl;
+	std::cerr << "---------------" << endl;
 }
 void print_boardrow(std::vector<int> v){
-	cout << '|';
+	std::cerr << '|';
 	for (std::vector<int>::iterator i = v.begin(); i != v.end(); ++i){
 		if(*i == 0){
-			std::cout <<  " |" ;
+			std::cerr <<  " |" ;
 		}
 		else{
-			std::cout << *i << '|' ;
+			std::cerr << *i << '|' ;
 		}
 		
 	}
-	std::cout << std::endl;
+	std::cerr << std::endl;
 }
 bool isKthBitSet(uint64_t n, int k) { 
     if ((n >> k) & 1){
@@ -367,7 +367,7 @@ void print_board(board bd){
 	for (matrix::iterator i = mat.begin(); i != mat.end(); ++i){
 		print_boardrow(*i);
 	}
-	cout << "-----------------" << endl;
+	std::cerr << "-----------------" << endl;
 }
 
 
@@ -423,7 +423,112 @@ void print_cannon(vector<uint16_t> cn){
 }
 
 
-vector<string> cannon_moves(board bd, uint16_t cannon, bool p_id){
+vector<board> cannon_moves(board bd, uint16_t cannon, bool p_id){
+
+	vector<board> res;
+	vector<vector<int>> ret;
+	vector<int> temp;
+	uint64_t pos_occupied  = bd.get_all();
+	uint64_t myteam;
+	if(p_id) myteam = bd.get_whites();
+	else myteam = bd.get_blacks();
+	uint16_t bitpos = cannon >> 8;	
+	vector<int> posi = {bitpos %8, bitpos/8};
+	bitpos = cannon & 0b0000000011111111;
+	vector<int> posf = {bitpos %8, bitpos/8};
+	vector<int> pos;
+	vector<int> old_pos;
+	std::vector<int> dir = {sgn(posi[0] - posf[0]), sgn(posi[1] - posf[1])};
+
+	pos = posi + dir;
+	if(valid_pos(&pos)){
+		if(!(pos_occupied & data[pos[1]*8 + pos[0]])){
+			old_pos = posi - dir - dir;
+			temp = {old_pos[0],old_pos[1],pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " M " + to_string(pos[0]) + " " + to_string(pos[1]);
+			ret.push_back(temp);
+			pos = pos + dir;
+			if(valid_pos(&pos) && !isKthBitSet( myteam , pos[1]*8 + pos[0])){
+				temp = {-1,-1, pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " B " + to_string(pos[0]) + " " + to_string(pos[1]);
+				ret.push_back(temp);
+			}
+			pos = pos + dir;
+			if(valid_pos(&pos) && !isKthBitSet( myteam , pos[1]*8 + pos[0])){
+				temp = {-1,-1, pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " B " + to_string(pos[0]) + " " + to_string(pos[1]);
+				ret.push_back(temp);
+			}
+		}
+	}
+	dir[0] = -dir[0];
+	dir[1] = -dir[1];
+	pos = posf + dir;
+	if(valid_pos(&pos)){
+		if(!(pos_occupied & data[pos[1]*8 + pos[0]])){
+			old_pos = posf - dir - dir;
+			temp = {old_pos[0],old_pos[1],pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " M " + to_string(pos[0]) + " " + to_string(pos[1]);
+			ret.push_back(temp);
+			pos = pos + dir;
+			if(valid_pos(&pos) && !isKthBitSet( myteam , pos[1]*8 + pos[0])){
+				temp = {-1,-1, pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " B " + to_string(pos[0]) + " " + to_string(pos[1]);
+				ret.push_back(temp);
+			}
+			pos = pos + dir;
+			if(valid_pos(&pos) && !isKthBitSet( myteam , pos[1]*8 + pos[0])){
+				temp = {-1,-1, pos[0], pos[1]};//"S " + to_string(old_pos[0]) + " " + to_string(old_pos[1]) + " B " + to_string(pos[0]) + " " + to_string(pos[1]);
+				ret.push_back(temp);
+			}
+		}
+	}
+
+	uint64_t tt;
+	board new_state = bd;
+	uint64_t oppteam_sol;
+	uint64_t oppteam_town;
+	if(p_id) {
+		for(int i=0; i<ret.size(); i++){
+			myteam = bd.get_white_soldiers();
+			oppteam_town = bd.get_black_townhall();
+			oppteam_sol = bd.get_black_soldiers();
+			new_state = bd;
+			if(ret[i][0] == -1){
+				oppteam_town = oppteam_town & (~data[ret[i][2] + ret[i][3]*8]);
+				oppteam_sol = oppteam_sol & (~data[ret[i][2] + ret[i][3]*8]);
+				new_state.set_black_soldiers_townhall(oppteam_sol, oppteam_town);
+				res.push_back(new_state);
+			}
+			else{
+					myteam = myteam & (~data[ret[i][0] + ret[i][1]*8]);
+					myteam = myteam | (data[ret[i][2] + ret[i][3]*8]);
+					new_state.set_white_soldiers(myteam);
+					res.push_back(new_state);
+				} 
+		}
+	}
+	else {
+		for(int i=0; i<ret.size(); i++){
+			myteam = bd.get_black_soldiers();
+			oppteam_sol = bd.get_white_soldiers();
+			oppteam_town = bd.get_white_townhall();
+			new_state = bd;
+			if(ret[i][0] == -1){
+				oppteam_town = oppteam_town & (~data[ret[i][2] + ret[i][3]*8]);
+				oppteam_sol = oppteam_sol & (~data[ret[i][2] + ret[i][3]*8]);
+				new_state.set_white_soldiers_townhall(oppteam_sol, oppteam_town);
+				res.push_back(new_state);
+			}
+			else{
+					myteam = myteam & (~data[ret[i][0] + ret[i][1]*8]);
+					myteam = myteam | (data[ret[i][2] + ret[i][3]*8]);
+					new_state.set_black_soldiers(myteam);
+					res.push_back(new_state);
+				} 
+		}
+	}
+
+	return res;
+
+}
+
+vector<string> cannon_moves_string(board bd, uint16_t cannon, bool p_id){
 
 	vector<string> ret;
 	string temp;
@@ -478,7 +583,6 @@ vector<string> cannon_moves(board bd, uint16_t cannon, bool p_id){
 		}
 	}
 	return ret;
-
 }
 
 vector<uint16_t> cannons(board bd, bool id){
@@ -624,7 +728,69 @@ uint64_t soldier_pos(board &bd, bool id){
 	return ret;
 }
 
-vector<string> soldier_moves(board bd, bool id){
+vector<board> soldier_moves(board bd, bool id){
+
+	vector<board> ret;
+	board temp;
+
+	uint64_t ws  = bd.get_white_soldiers();
+	uint64_t bs  = bd.get_black_soldiers();
+	uint64_t wspe= ws;
+	uint64_t bspe= bs;
+	uint64_t ball= bd.get_blacks();
+	uint64_t wall= bd.get_whites();
+	uint64_t bt  = bd.get_black_townhall();
+	uint64_t wt  = bd.get_white_townhall();
+	uint16_t x;
+	uint16_t y;
+	uint64_t r;
+
+	if(id == false){
+		while(bs!=0){
+			x = bitScanForward(bs);
+			bs = bs & (~data[x]);  					
+			r = black_fr[x] & (~ball);				
+			r = r | (cap_sd[x] & (wall));			
+			if((black_adj[x] & ws) != 0)		
+				r = r | (black_rtr[x] & (~ball));	
+			while(r!=0){
+				y = bitScanForward(r);
+				r = r & (~data[y]);
+				temp = bd;
+				temp.set_black_soldiers( (bspe&(~data[x])) | data[y] );
+				temp.set_white_soldiers_townhall( wspe&(~data[y]) , wt&(~data[y]) );
+				// temp = "S " + to_string(x%8) + " " + to_string(x/8) + " M " + to_string(y%8) + " " + to_string(y/8);
+				ret.push_back(temp);
+			}
+		}
+	}
+	else{
+
+		while(ws!=0){
+			x = bitScanForward(ws);
+			ws = ws & (~data[x]);
+			r = white_fr[x] & (~wall);
+			r = r | (cap_sd[x] & (ball));
+			if((white_adj[x] & bs) != 0)
+				r = r | (white_rtr[x] & (~wall));
+
+			while(r!=0){
+				y = bitScanForward(r);
+				r = r & (~data[y]);
+				temp = bd;
+				temp.set_white_soldiers( (wspe&(~data[x])) | data[y] );
+				temp.set_black_soldiers_townhall( bspe&(~data[y]) , bt&(~data[y]) );
+				// temp = "S " + to_string(x%8) + " " + to_string(x/8) + " M " + to_string(y%8) + " " + to_string(y/8);
+
+				ret.push_back(temp);
+			}
+		}
+	}
+
+	return ret;
+}
+
+vector<string> soldier_moves_string(board bd, bool id){
 
 	vector<string> ret;
 	string temp;
@@ -661,6 +827,7 @@ vector<string> soldier_moves(board bd, bool id){
 		}
 	}
 	else{
+
 		while(ws!=0){
 			x = bitScanForward(ws);
 			ws = ws & (~data[x]);
@@ -668,6 +835,7 @@ vector<string> soldier_moves(board bd, bool id){
 			r = r | (cap_sd[x] & (ball));
 			if((white_adj[x] & bs) != 0)
 				r = r | (white_rtr[x] & (~wall));
+
 			while(r!=0){
 				y = bitScanForward(r);
 				r = r & (~data[y]);
