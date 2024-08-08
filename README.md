@@ -1,19 +1,8 @@
-# AI-A2
-Cannon - Game Bot
+# Game of Cannon
 
-Either use state.cpp or state_boolmatrix.cpp </br>
-**state.cpp** - uses 1 vector<vector<int>> of 32 bit(4 Bytes) ints </br>
-**state_boolmatrix.cpp** - uses 7 vector<vector<bool>> of 8 bit(1 Byte) bools 
+### Goal - The goal of this assignment is to learn the adversarial search algorithms (mini-max and alpha beta pruning), which arise in sequential deterministic adversarial situations.
 
-Maintaining the state - 
+To learn how to play the game of cannon and the objective of the assignment, please go through this [pdf](./A2.pdf)
 
-1. **Identifying the soldiers (DONE)**
-    1. Their moves (free)
-    2. Their moves (enemy is adjacent)
-    3. Attacks on enemy
+Note : This program was written to complete the coursework requirements of Artificial Intelligence course [COL333](https://www.cse.iitd.ac.in/~mausam/courses/col333/autumn2023/)
 
-2.  **Identifying the cannons (DONE)**
-    1. Their moves
-    2. Their targets
-    
-  **Later** - Will try to implement the bitboard representation
